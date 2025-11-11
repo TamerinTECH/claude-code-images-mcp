@@ -15,6 +15,10 @@ outputs/
 *.jpg
 *.jpeg
 
+# But allow assets folder for documentation
+!assets/
+!assets/**
+
 # Logs
 logs
 *.log

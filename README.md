@@ -6,6 +6,8 @@
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TamerinTECH/claude-code-images-mcp/pulls)
 
+![Claude Code Image Generation Workflow](assets/claude-mcp-workflow.png)
+
 A Model Context Protocol (MCP) server that provides AI-powered image generation capabilities for Claude Code using Azure OpenAI. This agent enables Claude Code to generate images on demand for building UI mockups, prototypes, and visual assets.
 
 **🌟 Free to use, modify, and extend** - We welcome contributions from the community!
@@ -56,6 +58,60 @@ Get up and running in 2 minutes:
 ### Manual Installation
 
 If you prefer manual setup, see the [Manual Installation](#manual-installation) section below.
+
+## Examples
+
+### Creating Silly Bird Images and HTML Page
+
+Claude Code can generate multiple images and automatically create HTML pages to display them:
+
+```
+> let's create a simple hello world html page with images of silly birds
+```
+
+Claude Code will:
+1. Generate multiple silly bird images with creative prompts
+2. Save them to `generated-images/` in your working directory
+3. Create an HTML page with proper image references
+4. Style the page with CSS gradients and layouts
+
+**Result:**
+- `generated-images/silly-bird-1.png` - A pompous bird with fancy feathers
+- `generated-images/silly-bird-2.png` - A goofy bird doing a silly dance
+- `generated-images/silly-bird-3.png` - A quirky bird in sunglasses
+- `hello-silly-birds.html` - Complete HTML page displaying all images
+
+### Generating UI Mockups
+
+Create realistic app interfaces:
+
+```
+> generate a UI mockup for a modern task management app
+```
+
+**Result:** Professional UI mockup with proper spacing, typography, and visual hierarchy.
+
+### Custom Image Generation
+
+Generate specific images for your project:
+
+```
+> generate an image of a sunset over mountains for my hero section
+```
+
+**Result:** High-quality image saved with relative path, ready to use in your code.
+
+### Using Generated Images
+
+After generation, Claude Code knows the exact file paths and provides usage examples:
+
+```html
+<!-- HTML img tag -->
+<img src="generated-images/silly-bird-1.png" alt="Silly bird">
+
+<!-- CSS background -->
+background-image: url('generated-images/silly-bird-1.png');
+```
 
 ## Features
 
