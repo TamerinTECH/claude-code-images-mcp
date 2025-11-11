@@ -10,6 +10,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
+import path from 'path';
 import imageGenerator from './imageGenerator.js';
 
 // Create MCP server using modern API
@@ -43,18 +44,24 @@ server.tool(
       filename: filename || null,
     });
 
+    // Calculate relative path from current working directory
+    const relativePath = path.relative(process.cwd(), result.path).replace(/\\/g, '/');
+    const absolutePath = result.path.replace(/\\/g, '/');
+
     return {
       content: [
         {
           type: 'text',
           text: `✅ Image generated successfully!
 
-📁 **File saved to:** ${result.path}
+📁 **File saved to:** ${absolutePath}
 
 🔗 **How to use in your code:**
-   - Relative path: ${result.path.replace(/\\/g, '/')}
-   - HTML img tag: <img src="${result.path.replace(/\\/g, '/')}" alt="${prompt.substring(0, 50)}...">
-   - CSS background: background-image: url('${result.path.replace(/\\/g, '/')}');
+   - Relative path from current directory: ${relativePath}
+   - HTML img tag: <img src="${relativePath}" alt="${prompt.substring(0, 50)}...">
+   - CSS background: background-image: url('${relativePath}');
+
+💡 **Tip:** The relative path shown above works from your current directory: ${process.cwd()}
 
 📊 **Image details:**
    - Size: ${result.size}
@@ -96,18 +103,24 @@ server.tool(
       size: size || 'portrait',
     });
 
+    // Calculate relative path from current working directory
+    const relativePath = path.relative(process.cwd(), result.path).replace(/\\/g, '/');
+    const absolutePath = result.path.replace(/\\/g, '/');
+
     return {
       content: [
         {
           type: 'text',
           text: `✅ UI mockup generated successfully!
 
-📁 **File saved to:** ${result.path}
+📁 **File saved to:** ${absolutePath}
 
 🔗 **How to use in your code:**
-   - Relative path: ${result.path.replace(/\\/g, '/')}
-   - HTML img tag: <img src="${result.path.replace(/\\/g, '/')}" alt="${description.substring(0, 50)}...">
-   - CSS background: background-image: url('${result.path.replace(/\\/g, '/')}');
+   - Relative path from current directory: ${relativePath}
+   - HTML img tag: <img src="${relativePath}" alt="${description.substring(0, 50)}...">
+   - CSS background: background-image: url('${relativePath}');
+
+💡 **Tip:** The relative path shown above works from your current directory: ${process.cwd()}
 
 📊 **UI mockup details:**
    - Size: ${result.size}
