@@ -47,10 +47,14 @@ Get up and running in 2 minutes:
    - If you already have a `.env` file, it will ask if you want to keep it
    - Choose whether to add to Claude Code automatically
 
-4. **Start generating images!**
+4. **Build complete applications with AI-generated visual assets**:
+
+   With the MCP server configured, Claude Code can now generate all visual elements for your applications on-demand—from hero images and backgrounds to UI mockups, icons, and custom graphics. Simply describe what you need, and Claude Code will generate, save, and integrate the images directly into your project with proper file paths and code references.
+
    ```
-   > generate an image of a sunset over mountains
-   > create a UI mockup for a modern dashboard
+   > create a landing page with hero image, feature icons, and call-to-action buttons
+   > build a dashboard with charts backgrounds and user profile images
+   > design a portfolio site with project thumbnails and background patterns
    ```
 
 **That's it!** The installer handles everything: Node.js dependencies, configuration, testing, and Claude Code integration. You can safely re-run the installer anytime - it won't overwrite your configuration without asking.
@@ -231,6 +235,45 @@ If you prefer manual installation or the automated installer doesn't work:
    ```bash
    npm run test:unit
    ```
+
+## Environment Configuration
+
+### .env File Example
+
+The MCP server requires Azure OpenAI credentials configured in a `.env` file. Here's a complete example:
+
+```env
+# Azure OpenAI Endpoint
+# Find this in your Azure Portal under your OpenAI resource
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com
+
+# Azure OpenAI API Key
+# Found in Azure Portal > Your OpenAI Resource > Keys and Endpoint
+AZURE_OPENAI_API_KEY=1234567890abcdef1234567890abcdef
+
+# Deployment Name
+# The name you chose when deploying the image model
+# Recommended: flux-1-1-pro for fast, high-quality images
+# Alternatives: flux-1-schnell, gpt-image-1, gpt-image-1-mini
+AZURE_OPENAI_DEPLOYMENT=flux-1-1-pro
+
+# API Version
+# Use the latest preview version for image generation
+# Current recommended version: 2025-04-01-preview
+AZURE_OPENAI_API_VERSION=2025-04-01-preview
+
+# Output Directory (Optional)
+# Defaults to {current-working-directory}/generated-images
+# OUTPUT_DIR=/path/to/custom/output
+```
+
+**Getting Azure OpenAI Credentials:**
+
+1. Go to [Azure Portal](https://portal.azure.com)
+2. Navigate to your Azure OpenAI resource
+3. Click "Keys and Endpoint" in the left sidebar
+4. Copy your endpoint URL and one of the API keys
+5. Note your image generation deployment name (from the "Deployments" section)
 
 ## Integration with Claude Code
 
