@@ -493,7 +493,6 @@ claude-code-images/
 ├── generated-images/      # Output directory for images
 ├── package.json
 ├── .env.example
-├── claude_desktop_config.example.json
 └── README.md
 ```
 
