@@ -164,6 +164,7 @@ export class ImageGenerator {
       return {
         path: filePath,
         url: `file://${filePath}`,
+        base64: b64,
         prompt: prompt,
         size: pixelSize,
         quality,

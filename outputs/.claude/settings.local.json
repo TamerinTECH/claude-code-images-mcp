@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__image-generator__generate_image"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -47,15 +47,25 @@ server.tool(
       content: [
         {
           type: 'text',
-          text: JSON.stringify(
-            {
-              success: true,
-              message: 'Image generated successfully',
-              ...result,
-            },
-            null,
-            2
-          ),
+          text: `✅ Image generated successfully!
+
+📁 **File saved to:** ${result.path}
+
+🔗 **How to use in your code:**
+   - Relative path: ${result.path.replace(/\\/g, '/')}
+   - HTML img tag: <img src="${result.path.replace(/\\/g, '/')}" alt="${prompt.substring(0, 50)}...">
+   - CSS background: background-image: url('${result.path.replace(/\\/g, '/')}');
+
+📊 **Image details:**
+   - Size: ${result.size}
+   - Quality: ${result.quality}
+   - Model: ${result.modelType}
+   - Prompt: ${result.prompt}`,
+        },
+        {
+          type: 'image',
+          data: result.base64,
+          mimeType: 'image/png',
         },
       ],
     };
@@ -90,15 +100,26 @@ server.tool(
       content: [
         {
           type: 'text',
-          text: JSON.stringify(
-            {
-              success: true,
-              message: 'UI image generated successfully',
-              ...result,
-            },
-            null,
-            2
-          ),
+          text: `✅ UI mockup generated successfully!
+
+📁 **File saved to:** ${result.path}
+
+🔗 **How to use in your code:**
+   - Relative path: ${result.path.replace(/\\/g, '/')}
+   - HTML img tag: <img src="${result.path.replace(/\\/g, '/')}" alt="${description.substring(0, 50)}...">
+   - CSS background: background-image: url('${result.path.replace(/\\/g, '/')}');
+
+📊 **UI mockup details:**
+   - Size: ${result.size}
+   - Style: ${style || 'modern'}
+   - Type: ${type || 'web app'}
+   - Model: ${result.modelType}
+   - Description: ${description}`,
+        },
+        {
+          type: 'image',
+          data: result.base64,
+          mimeType: 'image/png',
         },
       ],
     };
