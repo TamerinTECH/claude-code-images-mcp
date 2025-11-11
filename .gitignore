@@ -8,8 +8,9 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
-# Generated images
+# Generated images and output files
 generated-images/
+outputs/
 *.png
 *.jpg
 *.jpeg
