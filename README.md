@@ -1,14 +1,14 @@
-# Claude Code Image Generation Agent
+# Claude Code Image Generation MCP Server
 
-**🎨 An open-source MCP server for AI-powered image generation**
+**🎨 An open-source local MCP server for AI-powered image generation**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TamerinTECH/claude-code-images-mcp/pulls)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TamerinTECH/claude-code-generate-images-mcp/pulls)
 
 ![Claude Code Image Generation Workflow](assets/claude-mcp-workflow.png)
 
-A Model Context Protocol (MCP) server that provides AI-powered image generation capabilities for Claude Code using Azure OpenAI. This agent enables Claude Code to generate images on demand for building UI mockups, prototypes, and visual assets.
+A local Model Context Protocol (MCP) server that provides AI-powered image generation capabilities for Claude Code using Azure OpenAI. This MCP server enables Claude Code to generate images on demand for building UI mockups, prototypes, and visual assets.
 
 **🌟 Free to use, modify, and extend** - We welcome contributions from the community!
 
@@ -34,8 +34,8 @@ Get up and running in 2 minutes:
 
 1. **Clone this repository**:
    ```bash
-   git clone https://github.com/TamerinTECH/claude-code-images-mcp.git
-   cd claude-code-images-mcp
+   git clone https://github.com/TamerinTECH/claude-code-generate-images-mcp.git
+   cd claude-code-generate-images-mcp
    ```
 
 2. **Run the automated installer**:
@@ -236,7 +236,7 @@ If you prefer manual installation or the automated installer doesn't work:
 
 ### Quick Integration (Recommended)
 
-The easiest way to add this agent to Claude Code is using the `claude mcp add` command.
+The easiest way to add this MCP server to Claude Code is using the `claude mcp add` command.
 
 **Important:** Make sure you have a `.env` file configured with your Azure OpenAI credentials first (the installer will create this for you).
 
@@ -269,7 +269,7 @@ claude mcp remove image-generator
 
 When you run the installer (`install.sh` or `install.ps1`), it will:
 1. Create and configure your `.env` file
-2. Ask if you want to add the agent to Claude Code
+2. Ask if you want to add the MCP server to Claude Code
 3. Run the `claude mcp add` command for you automatically
 
 ### Manual Integration (Alternative Method)
@@ -291,7 +291,7 @@ If you prefer to manually edit configuration files or the `claude mcp add` comma
 
 The server will automatically load configuration from the `.env` file in the project directory.
 
-Then restart Claude Code to load the new agent.
+Then restart Claude Code to load the new MCP server.
 
 ## Available Tools
 
@@ -478,7 +478,7 @@ chmod +x install.sh
 - You'll be given options to keep, backup and reconfigure, or skip
 - Dependency installation will be re-run (idempotent)
 
-### Agent Not Appearing in Claude Code
+### MCP Server Not Appearing in Claude Code
 
 1. Check that the config file path is correct
 2. Verify the node path in the configuration
@@ -528,9 +528,9 @@ npm run dev
 
 This runs the server with auto-reload on file changes.
 
-### Testing the Agent
+### Testing the MCP Server
 
-You can test the agent directly using stdio:
+You can test the MCP server directly using stdio:
 
 ```bash
 node src/index.js
@@ -596,7 +596,7 @@ The agent automatically detects which model you're using based on your deploymen
 - If deployment name contains "gpt-image" → gpt-image-1 model (standard sizes)
 - Default: Flux
 
-This allows the agent to apply the correct validation and parameters automatically.
+This allows the MCP server to apply the correct validation and parameters automatically.
 
 ## Security Notes
 
@@ -676,7 +676,7 @@ Whether you want to:
 ### How to Contribute
 
 1. **Fork the repository** from GitHub
-2. **Clone your fork**: `git clone https://github.com/yourusername/claude-code-images-mcp.git`
+2. **Clone your fork**: `git clone https://github.com/yourusername/claude-code-generate-images-mcp.git`
 3. **Create a feature branch**: `git checkout -b feature/amazing-feature`
 4. **Make your changes** (add features, fix bugs, improve docs)
 5. **Run tests**: `npm test` (ensure all tests pass)
