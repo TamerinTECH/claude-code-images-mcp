@@ -102,7 +102,8 @@ export class ImageGenerator {
     size = 'medium',
     outputFormat = 'png',
     outputCompression = 100,
-    filename = null
+    filename = null,
+    workingDirectory = null
   } = {}) {
     if (!prompt) {
       throw new Error('prompt is required');
@@ -158,7 +159,7 @@ export class ImageGenerator {
       console.error('✅ [Image Generation] Image generated successfully');
 
       // Save to local file
-      const filePath = await this.saveBase64Image(b64, outputFormat, filename);
+      const filePath = await this.saveBase64Image(b64, outputFormat, filename, workingDirectory);
       console.error(`💾 [Image Generation] Image saved to: ${filePath}`);
 
       return {
@@ -188,7 +189,7 @@ export class ImageGenerator {
    * @param {string} params.size - Image size (default: portrait for mobile)
    * @returns {Promise<{path: string, url: string, prompt: string}>} Generated image info
    */
-  async generateUIImage({ description, style = 'modern', type = 'web app', size = 'portrait' }) {
+  async generateUIImage({ description, style = 'modern', type = 'web app', size = 'portrait', workingDirectory = null }) {
     if (!description) {
       throw new Error('description is required for UI generation');
     }
@@ -206,6 +207,7 @@ export class ImageGenerator {
       size,
       outputFormat: 'png',
       outputCompression: 100,
+      workingDirectory,
     });
   }
 
@@ -263,11 +265,17 @@ export class ImageGenerator {
    * @param {string} base64Data - Base64 encoded image data
    * @param {string} format - Image format (png, jpg)
    * @param {string} customFilename - Optional custom filename
+   * @param {string} workingDirectory - Optional working directory to save images relative to
    * @returns {Promise<string>} Absolute path to saved file
    */
-  async saveBase64Image(base64Data, format = 'png', customFilename = null) {
+  async saveBase64Image(base64Data, format = 'png', customFilename = null, workingDirectory = null) {
+    // Determine output directory based on working directory if provided
+    const outputDir = workingDirectory
+      ? path.join(workingDirectory, 'generated-images')
+      : config.outputDir;
+
     // Ensure output directory exists
-    await fs.mkdir(config.outputDir, { recursive: true });
+    await fs.mkdir(outputDir, { recursive: true });
 
     // Generate filename
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
@@ -275,7 +283,7 @@ export class ImageGenerator {
       ? `${customFilename}.${format}`
       : `image-${timestamp}.${format}`;
 
-    const filePath = path.join(config.outputDir, filename);
+    const filePath = path.join(outputDir, filename);
 
     // Convert base64 to buffer and save
     const buffer = Buffer.from(base64Data, 'base64');

@@ -20,7 +20,8 @@ export class Config {
     this.deployment = process.env.AZURE_OPENAI_DEPLOYMENT || 'flux-1-1-pro';
     this.apiVersion = process.env.AZURE_OPENAI_API_VERSION || '2025-04-01-preview';
     this.apiKey = process.env.AZURE_OPENAI_API_KEY;
-    this.outputDir = process.env.OUTPUT_DIR || path.join(__dirname, '..', 'generated-images');
+    // Use current working directory instead of project root
+    this.outputDir = process.env.OUTPUT_DIR || path.join(process.cwd(), 'generated-images');
   }
 
   /**
