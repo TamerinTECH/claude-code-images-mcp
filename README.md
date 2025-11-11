@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/yourusername/claude-code-images/pulls)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TamerinTECH/claude-code-images-mcp/pulls)
 
 A Model Context Protocol (MCP) server that provides AI-powered image generation capabilities for Claude Code using Azure OpenAI. This agent enables Claude Code to generate images on demand for building UI mockups, prototypes, and visual assets.
 
@@ -32,8 +32,8 @@ Get up and running in 2 minutes:
 
 1. **Clone this repository**:
    ```bash
-   git clone https://github.com/TamerinTECH/claude-code-images.git
-   cd claude-code-images
+   git clone https://github.com/TamerinTECH/claude-code-images-mcp.git
+   cd claude-code-images-mcp
    ```
 
 2. **Run the automated installer**:
@@ -621,7 +621,7 @@ Whether you want to:
 ### How to Contribute
 
 1. **Fork the repository** from GitHub
-2. **Clone your fork**: `git clone https://github.com/yourusername/claude-code-images.git`
+2. **Clone your fork**: `git clone https://github.com/yourusername/claude-code-images-mcp.git`
 3. **Create a feature branch**: `git checkout -b feature/amazing-feature`
 4. **Make your changes** (add features, fix bugs, improve docs)
 5. **Run tests**: `npm test` (ensure all tests pass)
