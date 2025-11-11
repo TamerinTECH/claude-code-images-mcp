@@ -1,0 +1,39 @@
+{
+  "name": "claude-code-image-generator",
+  "version": "1.0.0",
+  "description": "MCP server for generating images using Azure OpenAI for Claude Code integration",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "claude-image-agent": "./src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test tests/**/*.test.js",
+    "test:unit": "node --test tests/unit/**/*.test.js",
+    "test:integration": "node tests/integration/test-agent.js",
+    "test:all": "npm run test:unit && npm run test:integration"
+  },
+  "keywords": [
+    "claude-code",
+    "mcp",
+    "azure-openai",
+    "image-generation",
+    "flux",
+    "ai"
+  ],
+  "author": {
+    "name": "TamerinTECH GmbH",
+    "email": "info@tamerin.tech"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

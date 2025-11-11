@@ -1,0 +1,16 @@
+# Ensure shell scripts have Unix line endings
+*.sh text eol=lf
+
+# Ensure PowerShell scripts have Windows line endings
+*.ps1 text eol=crlf
+
+# Standard text files
+*.js text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.example text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
