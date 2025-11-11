@@ -79,6 +79,8 @@ Claude Code will:
 3. Create an HTML page with proper image references
 4. Style the page with CSS gradients and layouts
 
+![Claude Code in Action](assets/claude-code-example.png)
+
 **Result:**
 - `generated-images/silly-bird-1.png` - A pompous bird with fancy feathers
 - `generated-images/silly-bird-2.png` - A goofy bird doing a silly dance
