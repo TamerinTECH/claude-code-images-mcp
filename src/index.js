@@ -1,17 +1,68 @@
 #!/usr/bin/env node
 
 /**
- * Claude Code Image Generation Agent
+ * Claude Code Image Generation MCP Server
  *
- * MCP server that provides image generation capabilities using Azure OpenAI
- * for integration with Claude Code
+ * MCP server that provides image generation capabilities using multiple providers:
+ * - Google Gemini (Nano Banana) - Default, fast and free-tier friendly
+ * - Azure OpenAI (Flux/gpt-image-1) - Alternative with more control
  */
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
 import path from 'path';
-import imageGenerator from './imageGenerator.js';
+import config from './config.js';
+import { createImageProvider } from './providerFactory.js';
+
+// Create the image provider based on configuration
+let imageProvider;
+try {
+  config.validate();
+  imageProvider = createImageProvider();
+  console.error(`✅ [MCP Server] Using ${config.provider} provider`);
+} catch (error) {
+  console.error(`❌ [MCP Server] Configuration error: ${error.message}`);
+  process.exit(1);
+}
+
+/**
+ * Build a prompt optimized for UI/app screenshot generation
+ */
+function buildUIPrompt(description, style, type) {
+  const styleDescriptions = {
+    modern: 'sleek, contemporary design with clean lines and vibrant colors',
+    minimal: 'minimalist design with lots of white space and subtle colors',
+    professional: 'professional corporate design with business-appropriate colors',
+    playful: 'playful and colorful design with fun elements and bright colors',
+    dark: 'dark mode interface with dark background and accent colors',
+    glassmorphism: 'glassmorphism design with frosted glass effects and transparency'
+  };
+
+  const typeDescriptions = {
+    'mobile app': 'mobile application interface with typical mobile UI patterns',
+    'web app': 'web application interface with desktop layout',
+    'dashboard': 'analytics dashboard with charts, graphs, and data visualizations',
+    'landing page': 'marketing landing page with hero section and call-to-action',
+    'e-commerce': 'e-commerce product page or shopping interface',
+    'social media': 'social media feed or profile interface'
+  };
+
+  let prompt = `A high-quality UI design screenshot of a ${type}. `;
+  prompt += `${description}. `;
+
+  if (styleDescriptions[style]) {
+    prompt += `The design features a ${styleDescriptions[style]}. `;
+  }
+
+  if (typeDescriptions[type]) {
+    prompt += `This is a ${typeDescriptions[type]}. `;
+  }
+
+  prompt += 'The design should look professional and realistic, like a real application screenshot.';
+
+  return prompt;
+}
 
 // Create MCP server using modern API
 const server = new McpServer({
@@ -21,13 +72,13 @@ const server = new McpServer({
 
 /**
  * Tool: generate_image
- * Generate an image from a text prompt using Azure OpenAI
+ * Generate an image from a text prompt
  */
 server.tool(
   'generate_image',
-  'Generate an image from a detailed text prompt using Azure OpenAI (Flux or gpt-image-1 models). ' +
-    'Flux is preferred for faster generation and flexible sizing. ' +
-    'Supports various sizes (256x256 to 1440x1440 for Flux, must be multiples of 32) and quality settings. ' +
+  'Generate an image from a detailed text prompt using Google Gemini (default) or Azure OpenAI. ' +
+    'Google Gemini (Nano Banana) is fast and free-tier friendly. Azure supports Flux/gpt-image-1 with more control. ' +
+    'Supports various sizes and quality settings. ' +
     'Returns the file path to the generated image. IMPORTANT: Provide detailed, descriptive prompts (at least 10 characters).',
   {
     prompt: z.string().min(10).describe('Detailed image generation prompt describing what to create (minimum 10 characters, be specific and descriptive)'),
@@ -37,7 +88,7 @@ server.tool(
     workingDirectory: z.string().optional().describe('Working directory where the image should be saved (defaults to current directory). Pass your current working directory to save images relative to your project.'),
   },
   async ({ prompt, quality, size, filename, workingDirectory }) => {
-    const result = await imageGenerator.generateImage(prompt, {
+    const result = await imageProvider.generateImage(prompt, {
       quality: quality || 'standard',
       size: size || 'medium',
       outputFormat: 'png',
@@ -67,9 +118,9 @@ server.tool(
    - File name: ${imageFilename}
 
 📊 **Image details:**
+   - Provider: ${result.provider || config.provider}
    - Size: ${result.size}
    - Quality: ${result.quality}
-   - Model: ${result.modelType}
    - Prompt: ${result.prompt}`,
         },
         {
@@ -100,11 +151,15 @@ server.tool(
     workingDirectory: z.string().optional().describe('Working directory where the image should be saved (defaults to current directory). Pass your current working directory to save images relative to your project.'),
   },
   async ({ description, style, type, size, workingDirectory }) => {
-    const result = await imageGenerator.generateUIImage({
-      description,
-      style: style || 'modern',
-      type: type || 'web app',
+    // Build UI-specific prompt
+    const uiPrompt = buildUIPrompt(description, style || 'modern', type || 'web app');
+
+    const result = await imageProvider.generateImage(uiPrompt, {
+      quality: 'standard',
       size: size || 'portrait',
+      outputFormat: 'png',
+      outputCompression: 100,
+      filename: null,
       workingDirectory: workingDirectory || null,
     });
 
@@ -129,10 +184,10 @@ server.tool(
    - File name: ${uiFilename}
 
 📊 **UI mockup details:**
+   - Provider: ${result.provider || config.provider}
    - Size: ${result.size}
    - Style: ${style || 'modern'}
    - Type: ${type || 'web app'}
-   - Model: ${result.modelType}
    - Description: ${description}`,
         },
         {

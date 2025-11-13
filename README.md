@@ -8,7 +8,7 @@
 
 ![Claude Code Image Generation Workflow](assets/claude-mcp-workflow.png)
 
-A local MCP server that lets Claude Code (or other tools) to generate and save images directly into your project, while you vibe code. It connects to Azure OpenAI or other providers, my preferred model is Flux 1.1 Pro, you can also use gpt-image-1 or extend the code for other models.
+A local MCP server that lets Claude Code (or other tools) to generate and save images directly into your project, while you vibe code. It connects to **Google Gemini (Nano Banana)** by default, or Azure OpenAI as an alternative. Gemini is fast, has a generous free tier, and works great for most use cases. Azure supports Flux 1.1 Pro and gpt-image-1 if you need more control.
 
 ## What it is, and why it helps
 
@@ -142,24 +142,35 @@ Simple prompts, specific use cases, no sizes. The agent will fill in technical d
 
 ## Models
 
-* **Preferred**, Flux 1.1 Pro for UI assets and product visuals.
-* **Azure alternative**, gpt-image-1 when you want Azure native path or specific constraints.
-* **Extensible**, you can add adapters for other providers or custom endpoints, even experimental models.
+* **Default (Recommended)**: **Google Gemini** (aka Nano Banana) - Fast, generous free tier, great for most use cases. Perfect for prototyping and production.
+* **Azure Alternative**: **Flux 1.1 Pro** - When you need Azure's infrastructure or specific sizing control (256x256-1440x1440, multiples of 32).
+* **Azure Alternative**: **gpt-image-1** - Azure OpenAI native model for specific compliance or regional requirements.
+* **Extensible**: Add adapters for other providers or custom endpoints.
 
-Switch models by changing `AZURE_OPENAI_DEPLOYMENT` in `.env`.
+Switch providers by changing `IMAGE_PROVIDER` in `.env` (`google` or `azure`).
 
 ---
 
 ## Configuration reference
 
-`.env` keys,
+`.env` keys:
 
-* `AZURE_OPENAI_ENDPOINT`
-* `AZURE_OPENAI_API_KEY`
-* `AZURE_OPENAI_DEPLOYMENT`
-* `AZURE_OPENAI_API_VERSION`
+**Provider Selection:**
+* `IMAGE_PROVIDER` - Choose `google` (default) or `azure`
 
-You can adjust output folders and file naming in the server code, so it fits your repo layout.
+**Google Gemini (when IMAGE_PROVIDER=google):**
+* `GEMINI_API_KEY` - Get your free key at https://aistudio.google.com/app/apikey
+
+**Azure OpenAI (when IMAGE_PROVIDER=azure):**
+* `AZURE_OPENAI_ENDPOINT` - Your Azure resource endpoint
+* `AZURE_OPENAI_API_KEY` - Your Azure API key
+* `AZURE_OPENAI_DEPLOYMENT` - Model deployment name (flux-1-1-pro or gpt-image-1)
+* `AZURE_OPENAI_API_VERSION` - API version (default: 2025-04-01-preview)
+
+**Optional:**
+* `OUTPUT_DIR` - Custom output directory for generated images
+
+You can adjust output folders and file naming in the server code to fit your repo layout.
 
 ---
 
@@ -183,7 +194,7 @@ Community contributions are welcome, focus on practical developer flow. Good are
 
 ## Disclaimer
 
-This project is provided by TamerinTECH GmbH as open source. It is not an official product of Anthropic, Microsoft, or Azure. Use at your own risk. You are responsible for your Azure OpenAI usage and costs. No warranty.
+This project is provided by TamerinTECH GmbH as open source. It is not an official product of Anthropic, Google, Microsoft, or Azure. Use at your own risk. You are responsible for your API usage and costs (Google Gemini or Azure OpenAI). No warranty.
 
 ## License
 
