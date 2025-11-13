@@ -38,42 +38,40 @@ export class GoogleNanaBananaProvider extends ImageProvider {
    * @returns {Promise<Object>} Generated image data
    */
   async generateImage(prompt, options = {}) {
+    if (!prompt) {
+      throw new Error('prompt is required');
+    }
+
+    if (prompt.length < 10) {
+      throw new Error('prompt should be detailed and descriptive (at least 10 characters)');
+    }
+
     try {
-      const model = this.client.getGenerativeModel({
-        model: GEMINI_MODEL_ID
-      });
+      console.error('🎨 [Google Gemini] Generating image...');
+      console.error(`   Model: ${GEMINI_MODEL_ID}`);
+      console.error(`   Prompt: ${prompt.substring(0, 100)}${prompt.length > 100 ? '...' : ''}`);
 
-      // Generate image with Gemini
-      const result = await model.generateContent({
-        contents: [{
-          role: 'user',
-          parts: [{ text: prompt }]
-        }],
-        generationConfig: {
-          responseModalities: ['image']
-        }
+      // Generate image with Gemini using models.generateImages API
+      const result = await this.client.models.generateImages({
+        model: GEMINI_MODEL_ID,
+        prompt: prompt,
+        number_of_images: 1
       });
-
-      const response = await result.response;
 
       // Extract image from response
-      let imageData = null;
-      let mimeType = 'image/png';
-
-      for (const candidate of response.candidates || []) {
-        for (const part of candidate.content?.parts || []) {
-          if (part.inlineData) {
-            imageData = part.inlineData.data;
-            mimeType = part.inlineData.mimeType || 'image/png';
-            break;
-          }
-        }
-        if (imageData) break;
+      if (!result.images || result.images.length === 0) {
+        throw new Error('Gemini did not return any images');
       }
+
+      const image = result.images[0];
+      const imageData = image.image; // Base64 encoded image data
+      const mimeType = image.mimeType || 'image/png';
 
       if (!imageData) {
-        throw new Error('Gemini did not return an image');
+        throw new Error('Gemini did not return image data');
       }
+
+      console.error('✅ [Google Gemini] Image generated successfully');
 
       // Save the image
       const filePath = await this.saveBase64Image(
@@ -82,6 +80,8 @@ export class GoogleNanaBananaProvider extends ImageProvider {
         options.filename,
         options.workingDirectory
       );
+
+      console.error(`💾 [Google Gemini] Image saved to: ${filePath}`);
 
       return {
         base64: imageData,
@@ -94,6 +94,12 @@ export class GoogleNanaBananaProvider extends ImageProvider {
         provider: 'google-nano-banana'
       };
     } catch (error) {
+      console.error('❌ [Google Gemini] Failed to generate image:');
+      console.error('   Message:', error.message);
+      if (error.response) {
+        console.error('   Status:', error.response.status);
+        console.error('   Data:', error.response.data);
+      }
       throw new Error(`Google Nano Banana image generation failed: ${error.message}`);
     }
   }

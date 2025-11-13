@@ -242,9 +242,10 @@ server.tool(
 async function main() {
   const transport = new StdioServerTransport();
 
-  console.error('Claude Code Image Generation Agent started');
+  console.error('Claude Code Image Generation MCP Server started');
   console.error('MCP Server running on stdio transport');
-  console.error('Ready to generate images using Azure OpenAI');
+  const providerName = config.provider === 'google' ? 'Google Gemini (Nano Banana)' : 'Azure OpenAI';
+  console.error(`Ready to generate images using ${providerName}`);
 
   await server.connect(transport);
 }
