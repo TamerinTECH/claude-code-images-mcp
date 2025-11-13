@@ -20,13 +20,33 @@ describe('Config', () => {
   });
 
   describe('constructor', () => {
-    it('should load environment variables', () => {
+    it('should default to google provider', () => {
+      delete process.env.IMAGE_PROVIDER;
+
+      const config = new Config();
+
+      assert.strictEqual(config.provider, 'google');
+    });
+
+    it('should load google provider config', () => {
+      process.env.IMAGE_PROVIDER = 'google';
+      process.env.GEMINI_API_KEY = 'test-gemini-key';
+
+      const config = new Config();
+
+      assert.strictEqual(config.provider, 'google');
+      assert.strictEqual(config.geminiApiKey, 'test-gemini-key');
+    });
+
+    it('should load azure provider config', () => {
+      process.env.IMAGE_PROVIDER = 'azure';
       process.env.AZURE_OPENAI_ENDPOINT = 'https://test.openai.azure.com';
       process.env.AZURE_OPENAI_API_KEY = 'test-key';
       process.env.AZURE_OPENAI_DEPLOYMENT = 'flux-test';
 
       const config = new Config();
 
+      assert.strictEqual(config.provider, 'azure');
       assert.strictEqual(config.endpoint, 'https://test.openai.azure.com');
       assert.strictEqual(config.apiKey, 'test-key');
       assert.strictEqual(config.deployment, 'flux-test');
@@ -50,7 +70,17 @@ describe('Config', () => {
   });
 
   describe('validate', () => {
-    it('should pass validation with valid config', () => {
+    it('should pass validation with valid google config', () => {
+      process.env.IMAGE_PROVIDER = 'google';
+      process.env.GEMINI_API_KEY = 'test-key';
+
+      const config = new Config();
+
+      assert.doesNotThrow(() => config.validate());
+    });
+
+    it('should pass validation with valid azure config', () => {
+      process.env.IMAGE_PROVIDER = 'azure';
       process.env.AZURE_OPENAI_ENDPOINT = 'https://test.openai.azure.com';
       process.env.AZURE_OPENAI_API_KEY = 'test-key';
 
@@ -59,7 +89,20 @@ describe('Config', () => {
       assert.doesNotThrow(() => config.validate());
     });
 
-    it('should throw error if endpoint is missing', () => {
+    it('should throw error if google provider missing API key', () => {
+      process.env.IMAGE_PROVIDER = 'google';
+      delete process.env.GEMINI_API_KEY;
+
+      const config = new Config();
+
+      assert.throws(
+        () => config.validate(),
+        /GEMINI_API_KEY is required when using Google provider/
+      );
+    });
+
+    it('should throw error if azure provider missing endpoint', () => {
+      process.env.IMAGE_PROVIDER = 'azure';
       delete process.env.AZURE_OPENAI_ENDPOINT;
       process.env.AZURE_OPENAI_API_KEY = 'test-key';
 
@@ -67,11 +110,12 @@ describe('Config', () => {
 
       assert.throws(
         () => config.validate(),
-        /AZURE_OPENAI_ENDPOINT is required/
+        /AZURE_OPENAI_ENDPOINT is required when using Azure provider/
       );
     });
 
-    it('should throw error if API key is missing', () => {
+    it('should throw error if azure provider missing API key', () => {
+      process.env.IMAGE_PROVIDER = 'azure';
       process.env.AZURE_OPENAI_ENDPOINT = 'https://test.openai.azure.com';
       delete process.env.AZURE_OPENAI_API_KEY;
 
@@ -79,11 +123,23 @@ describe('Config', () => {
 
       assert.throws(
         () => config.validate(),
-        /AZURE_OPENAI_API_KEY is required/
+        /AZURE_OPENAI_API_KEY is required when using Azure provider/
       );
     });
 
-    it('should throw error with multiple missing fields', () => {
+    it('should throw error with unknown provider', () => {
+      process.env.IMAGE_PROVIDER = 'unknown';
+
+      const config = new Config();
+
+      assert.throws(
+        () => config.validate(),
+        /Unknown IMAGE_PROVIDER: unknown/
+      );
+    });
+
+    it('should throw error with multiple missing azure fields', () => {
+      process.env.IMAGE_PROVIDER = 'azure';
       delete process.env.AZURE_OPENAI_ENDPOINT;
       delete process.env.AZURE_OPENAI_API_KEY;
 
