@@ -206,7 +206,30 @@ if ($runTests -eq 'y' -or $runTests -eq 'Y') {
     WriteInfo "Running unit tests..."
     try {
         npm run test:unit
-        if ($LASTEXITCODE -eq 0) { WriteOk "All unit tests passed" }
+        if ($LASTEXITCODE -eq 0) {
+            WriteOk "All unit tests passed"
+
+            # Offer to run live image generation test
+            Write-Host ""
+            $runLiveTest = Read-Host "Test live image generation with your API key (y/n)"
+            if ($runLiveTest -eq 'y' -or $runLiveTest -eq 'Y') {
+                WriteInfo "Running live image generation test..."
+                WriteWarn "This will use your API quota and generate a test image"
+                try {
+                    $env:RUN_API_TESTS = "true"
+                    npm run test:integration
+                    if ($LASTEXITCODE -eq 0) {
+                        WriteOk "Live image generation test passed!"
+                        WriteInfo "Check the generated-images folder for test images"
+                    }
+                    else { WriteWarn "Live test failed - check your API key and quota" }
+                } catch {
+                    WriteWarn "Failed to run live test"
+                } finally {
+                    Remove-Item Env:\RUN_API_TESTS -ErrorAction SilentlyContinue
+                }
+            }
+        }
         else { WriteWarn "Some tests failed, check output" }
     } catch { WriteWarn "Failed to run tests" }
 }

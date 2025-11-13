@@ -206,6 +206,23 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 
     if [ $? -eq 0 ]; then
         success "All unit tests passed!"
+
+        # Offer to run live image generation test
+        echo ""
+        read -p "Test live image generation with your API key? (y/n) " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            info "Running live image generation test..."
+            warning "This will use your API quota and generate a test image"
+            RUN_API_TESTS=true npm run test:integration
+
+            if [ $? -eq 0 ]; then
+                success "Live image generation test passed!"
+                info "Check the generated-images folder for test images"
+            else
+                warning "Live test failed - check your API key and quota"
+            fi
+        fi
     else
         warning "Some tests failed. Please check the output above."
     fi
