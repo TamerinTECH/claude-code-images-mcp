@@ -174,6 +174,54 @@ You can adjust output folders and file naming in the server code to fit your rep
 
 ---
 
+## How to get a Google Gemini API key
+
+Follow these steps to create your own API key for Google's Gemini models (Nano Banana).
+
+### 1. Create or choose a Google account
+
+Use your existing Google account, or create a new one at `accounts.google.com`.
+
+### 2. Open Google AI Studio
+
+1. Go to **Google AI Studio**: https://aistudio.google.com
+2. Sign in with your Google account.
+
+### 3. Create a new API key
+
+1. In AI Studio, click on **API keys** in the left menu (or **Get API key** button).
+2. Click **Create API key**.
+3. If asked, choose a Google Cloud project or create a new one.
+4. Confirm and **copy the generated API key**.
+
+This key can be used to call Gemini models, including **`gemini-2.0-flash-exp`** (Nano Banana).
+
+### 4. Enable billing if needed
+
+* Google Gemini has a generous free tier (15 requests per minute).
+* Some usage levels may require billing on the connected Google Cloud project.
+* If AI Studio asks you to enable billing, follow the steps and attach a payment method.
+* Typical cost: ~$0.039 per image on paid tier (pay-as-you-go).
+
+### 5. Add the key to the MCP server
+
+On your machine where the MCP server runs:
+
+1. Create or edit your `.env` file in the project folder.
+
+2. Add your key like this:
+
+   ```bash
+   IMAGE_PROVIDER=google
+   GEMINI_API_KEY=your_api_key_here
+   ```
+
+3. Save the file and restart the MCP server (or restart Claude Code).
+
+**Your API key stays local on your system.** The MCP project does not send it to anyone else and it is not included in the repository.
+
+---
+
 ## Troubleshooting
 
 * **PowerShell blocks scripts**, run
